@@ -117,7 +117,7 @@ def run_test(cfg, model, distributed):
 def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
-        "--config-file",
+        "--config_file",
         default="",
         metavar="FILE",
         help="path to config file",
@@ -125,7 +125,7 @@ def main():
     )
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument(
-        "--skip-test",
+        "--skip_test",
         dest="skip_test",
         help="Do not test the final model",
         action="store_true",

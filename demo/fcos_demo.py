@@ -11,25 +11,25 @@ import time
 def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Webcam Demo")
     parser.add_argument(
-        "--config-file",
+        "--config_file",
         default="configs/fcos/fcos_imprv_R_50_FPN_1x.yaml",
         metavar="FILE",
         help="path to config file",
     )
     parser.add_argument(
         "--weights",
-        default="FCOS_imprv_R_50_FPN_1x.pth",
+        default="models/FCOS_imprv_R_50_FPN_1x.pth",
         metavar="FILE",
         help="path to the trained model",
     )
     parser.add_argument(
-        "--images-dir",
+        "--images_dir",
         default="demo/images",
         metavar="DIR",
         help="path to demo images directory",
     )
     parser.add_argument(
-        "--min-image-size",
+        "--min_image_size",
         type=int,
         default=800,
         help="Smallest size of the image to feed to the model. "
@@ -101,9 +101,10 @@ def main():
         composite = coco_demo.run_on_opencv_image(img)
         print("{}\tinference time: {:.2f}s".format(im_name, time.time() - start_time))
         cv2.imshow(im_name, composite)
-    print("Press any keys to exit ...")
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    print("Press any key to exit ...")
+    if cv2.waitKey(0):
+        cv2.destroyAllWindows()
+        exit()
 
 if __name__ == "__main__":
     main()
