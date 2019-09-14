@@ -109,15 +109,15 @@ class DatasetCatalog(object):
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
         "aic_train_cocostyle": {
-            "img_dir": "",
+            "img_dir": "aic/data/JPEGImages",
             "ann_file": ""
         },
         "aic_val_cocostyle": {
-            "img_dir": "",
+            "img_dir": "aic/data/JPEGImages",
             "ann_file": ""
         },
         "aic_test_cocostyle": {
-            "img_dir": "",
+            "img_dir": "aic/data/JPEGImages",
             "ann_file": ""
         }
     }

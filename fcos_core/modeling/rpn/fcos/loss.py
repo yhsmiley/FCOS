@@ -26,6 +26,7 @@ def get_num_gpus():
 def reduce_sum(tensor):
     import torch.distributed as dist
     tensor = tensor.clone()
+    # dist.all_reduce(tensor, op=dist.reduce_op.SUM)
     dist.all_reduce(tensor, op=dist.ReduceOp.SUM)
     return tensor
 
@@ -279,7 +280,8 @@ class FCOSLossComputation(object):
             ) / max(total_num_pos / float(num_gpus), 1.0)
         else:
             reg_loss = box_regression_flatten.sum()
-            reduce_sum(centerness_flatten.new_tensor([0.0]))
+            if num_gpus > 1:
+                reduce_sum(centerness_flatten.new_tensor([0.0]))
             centerness_loss = centerness_flatten.sum()
 
         return cls_loss, reg_loss, centerness_loss
