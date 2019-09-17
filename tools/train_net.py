@@ -129,15 +129,15 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "--output_dir",
+        default="./training_dir/aic/<cfg name>",
+        help="path of output dir",
+    )
+    parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
         default=None,
         nargs=argparse.REMAINDER,
-    )
-    parser.add_argument(
-        "--output_dir",
-        default="",
-        help="path of output dir",
     )
 
     args = parser.parse_args()

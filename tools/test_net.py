@@ -28,6 +28,11 @@ def main():
     )
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument(
+        "--output_folder",
+        default="./inference/aic/<cfg name>",
+        help="path of output folder",
+    )
+    parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
         default=None,
@@ -50,7 +55,8 @@ def main():
     cfg.merge_from_list(args.opts)
     cfg.freeze()
 
-    save_dir = ""
+    save_dir = args.output_folder
+    mkdir(save_dir)
     logger = setup_logger("fcos_core", save_dir, get_rank())
     logger.info("Using {} GPUs".format(num_gpus))
     logger.info(cfg)
@@ -74,7 +80,8 @@ def main():
     dataset_names = cfg.DATASETS.TEST
     if cfg.OUTPUT_DIR:
         for idx, dataset_name in enumerate(dataset_names):
-            output_folder = os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
+            # output_folder = os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
+            output_folder = args.output_folder
             mkdir(output_folder)
             output_folders[idx] = output_folder
     data_loaders_val = make_data_loader(cfg, is_train=False, is_distributed=distributed)

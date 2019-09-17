@@ -110,15 +110,15 @@ class DatasetCatalog(object):
         },
         "aic_train_cocostyle": {
             "img_dir": "aic/data/JPEGImages",
-            "ann_file": ""
+            "ann_file": "aic/data/Annotations/instances_aic_train.json"
         },
         "aic_val_cocostyle": {
             "img_dir": "aic/data/JPEGImages",
-            "ann_file": ""
+            "ann_file": "aic/data/Annotations/instances_aic_val.json"
         },
         "aic_test_cocostyle": {
             "img_dir": "aic/data/JPEGImages",
-            "ann_file": ""
+            "ann_file": "aic/data/Annotations/instances_aic_test.json"
         }
     }
 
