@@ -27,7 +27,7 @@ from fcos_core.utils.logger import setup_logger
 from fcos_core.utils.miscellaneous import mkdir
 
 
-def train(cfg, local_rank, distributed, output_dir):
+def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
@@ -49,6 +49,10 @@ def train(cfg, local_rank, distributed, output_dir):
 
     arguments = {}
     arguments["iteration"] = 0
+
+    output_dir = cfg.OUTPUT_DIR
+    if not output_dir:
+        mkdir(output_dir)
 
     save_to_disk = get_rank() == 0
     checkpointer = DetectronCheckpointer(
@@ -129,11 +133,6 @@ def main():
         action="store_true",
     )
     parser.add_argument(
-        "--output_dir",
-        default="./training_dir/aic/<cfg name>",
-        help="path of output dir",
-    )
-    parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
         default=None,
@@ -156,8 +155,8 @@ def main():
     cfg.merge_from_list(args.opts)
     cfg.freeze()
 
-    output_dir = args.output_dir
-    if output_dir:
+    output_dir = cfg.OUTPUT_DIR
+    if not output_dir:
         mkdir(output_dir)
 
     logger = setup_logger("fcos_core", output_dir, get_rank())
@@ -173,7 +172,7 @@ def main():
         logger.info(config_str)
     logger.info("Running with config:\n{}".format(cfg))
 
-    model = train(cfg, args.local_rank, args.distributed, output_dir)
+    model = train(cfg, args.local_rank, args.distributed)
 
     if not args.skip_test:
         run_test(cfg, model, args.distributed)
