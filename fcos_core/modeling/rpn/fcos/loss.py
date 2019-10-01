@@ -151,46 +151,52 @@ class FCOSLossComputation(object):
 
         for im_i in range(len(targets)):
             targets_per_im = targets[im_i]
-            assert targets_per_im.mode == "xyxy"
-            bboxes = targets_per_im.bbox
-            labels_per_im = targets_per_im.get_field("labels")
-            area = targets_per_im.area()
 
-            l = xs[:, None] - bboxes[:, 0][None]
-            t = ys[:, None] - bboxes[:, 1][None]
-            r = bboxes[:, 2][None] - xs[:, None]
-            b = bboxes[:, 3][None] - ys[:, None]
-            reg_targets_per_im = torch.stack([l, t, r, b], dim=2)
+            if len(targets_per_im) == 0:
+                labels_per_im = torch.zeros([len(xs)]).cuda()
+                reg_targets_per_im = torch.zeros([len(xs), 4]).cuda()
 
-            if self.center_sampling_radius > 0:
-                is_in_boxes = self.get_sample_region(
-                    bboxes,
-                    self.fpn_strides,
-                    self.num_points_per_level,
-                    xs, ys,
-                    radius=self.center_sampling_radius
-                )
             else:
-                # no center sampling, it will use all the locations within a ground-truth box
-                is_in_boxes = reg_targets_per_im.min(dim=2)[0] > 0
+                assert targets_per_im.mode == "xyxy"
+                bboxes = targets_per_im.bbox
+                labels_per_im = targets_per_im.get_field("labels")
+                area = targets_per_im.area()
 
-            max_reg_targets_per_im = reg_targets_per_im.max(dim=2)[0]
-            # limit the regression range for each location
-            is_cared_in_the_level = \
-                (max_reg_targets_per_im >= object_sizes_of_interest[:, [0]]) & \
-                (max_reg_targets_per_im <= object_sizes_of_interest[:, [1]])
+                l = xs[:, None] - bboxes[:, 0][None]
+                t = ys[:, None] - bboxes[:, 1][None]
+                r = bboxes[:, 2][None] - xs[:, None]
+                b = bboxes[:, 3][None] - ys[:, None]
+                reg_targets_per_im = torch.stack([l, t, r, b], dim=2)
 
-            locations_to_gt_area = area[None].repeat(len(locations), 1)
-            locations_to_gt_area[is_in_boxes == 0] = INF
-            locations_to_gt_area[is_cared_in_the_level == 0] = INF
+                if self.center_sampling_radius > 0:
+                    is_in_boxes = self.get_sample_region(
+                        bboxes,
+                        self.fpn_strides,
+                        self.num_points_per_level,
+                        xs, ys,
+                        radius=self.center_sampling_radius
+                    )
+                else:
+                    # no center sampling, it will use all the locations within a ground-truth box
+                    is_in_boxes = reg_targets_per_im.min(dim=2)[0] > 0
 
-            # if there are still more than one objects for a location,
-            # we choose the one with minimal area
-            locations_to_min_area, locations_to_gt_inds = locations_to_gt_area.min(dim=1)
+                max_reg_targets_per_im = reg_targets_per_im.max(dim=2)[0]
+                # limit the regression range for each location
+                is_cared_in_the_level = \
+                    (max_reg_targets_per_im >= object_sizes_of_interest[:, [0]]) & \
+                    (max_reg_targets_per_im <= object_sizes_of_interest[:, [1]])
 
-            reg_targets_per_im = reg_targets_per_im[range(len(locations)), locations_to_gt_inds]
-            labels_per_im = labels_per_im[locations_to_gt_inds]
-            labels_per_im[locations_to_min_area == INF] = 0
+                locations_to_gt_area = area[None].repeat(len(locations), 1)
+                locations_to_gt_area[is_in_boxes == 0] = INF
+                locations_to_gt_area[is_cared_in_the_level == 0] = INF
+
+                # if there are still more than one objects for a location,
+                # we choose the one with minimal area
+                locations_to_min_area, locations_to_gt_inds = locations_to_gt_area.min(dim=1)
+
+                reg_targets_per_im = reg_targets_per_im[range(len(locations)), locations_to_gt_inds]
+                labels_per_im = labels_per_im[locations_to_gt_inds]
+                labels_per_im[locations_to_min_area == INF] = 0
 
             labels.append(labels_per_im)
             reg_targets.append(reg_targets_per_im)
