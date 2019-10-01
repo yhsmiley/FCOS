@@ -18,7 +18,7 @@ def main():
     )
     parser.add_argument(
         "--weights",
-        default="models/FCOS_imprv_R_50_FPN_1x.pth",
+        default="training_dir/aic/fcos_imprv_R_101_FPN_1x/model_0123000.pth",
         metavar="FILE",
         help="path to the trained model",
     )
@@ -48,16 +48,17 @@ def main():
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     cfg.MODEL.WEIGHT = args.weights
-
     cfg.freeze()
 
     # The following per-class thresholds are computed by maximizing
     # per-class f-measure in their precision-recall curve.
     # Please see compute_thresholds_for_classes() in coco_eval.py for details.
     thresholds_for_classes = [
-        0.2295444905757904, 0.2409958839416504, 0.2051820456981659, 
-        0.32551994919776917, 0.6328923106193542, 0.36557620763778687,
-        0.2634440064430237, 0.47974541783332825, 0.2850644588470459
+        0.13954831659793854, 0.6866425275802612, 
+        0.17271439731121063, 0.17774343490600586, 
+        0.48415881395339966, 0.35142210125923157, 
+        0.17612455785274506, 0.21311333775520325, 
+        0.2128976583480835
     ]
 
     demo_im_names = os.listdir(args.images_dir)

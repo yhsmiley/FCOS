@@ -156,8 +156,8 @@ def main():
     cfg.freeze()
 
     output_dir = cfg.OUTPUT_DIR
-    if not output_dir:
-        mkdir(output_dir)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
     logger = setup_logger("fcos_core", output_dir, get_rank())
     logger.info("Using {} GPUs".format(num_gpus))

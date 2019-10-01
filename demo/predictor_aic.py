@@ -13,18 +13,43 @@ from fcos_core.utils import cv2_util
 
 class AICDemo(object):
     # COCO categories for pretty print
+    # CATEGORIES = [
+    #     "__background",
+    #     "computer",
+    #     "handheld",
+    #     "monitor",
+    #     "palmtree",
+    #     "radar",
+    #     "cellphone",
+    #     "electronics",
+    #     "person",
+    #     "laptop"
+    # ]
+
     CATEGORIES = [
         "__background",
-        "person",
-        "radar",
-        "palmtree",
-        "computer",
-        "handheld",
-        "cellphone",
         "monitor",
+        "computer",
+        "rifle",
+        "palmtree",
+        "revolver",
+        "laptop",
+        "radar",
+        "cannon",
         "electronics",
-        "laptop"
+        "cellphone",
+        "person",
+        "keyboard",
+        "mouse",
+        "handgun",
+        "face",
+        "hand",
+        "missile",
+        "poster",
+        "remote",
+        "tablet"
     ]
+    
 
     def __init__(
         self,

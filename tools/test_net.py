@@ -22,9 +22,15 @@ def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Inference")
     parser.add_argument(
         "--config_file",
-        default="/private/home/fmassa/github/detectron.pytorch_v2/configs/e2e_faster_rcnn_R_50_C4_1x_caffe2.yaml",
+        default="configs/aic/<cfg name>",
         metavar="FILE",
         help="path to config file",
+    )
+    parser.add_argument(
+        "--weights",
+        default="training_dir/aic/<weight>",
+        metavar="FILE",
+        help="path to the trained model",
     )
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument(
@@ -53,10 +59,11 @@ def main():
 
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
+    cfg.MODEL.WEIGHT = args.weights
     cfg.freeze()
 
     save_dir = args.output_folder
-    mkdir(save_dir)
+    os.mkdir(save_dir)
     logger = setup_logger("fcos_core", save_dir, get_rank())
     logger.info("Using {} GPUs".format(num_gpus))
     logger.info(cfg)
@@ -69,7 +76,7 @@ def main():
 
     output_dir = cfg.OUTPUT_DIR
     checkpointer = DetectronCheckpointer(cfg, model, save_dir=output_dir)
-    _ = checkpointer.load(cfg.MODEL.WEIGHT)
+    _ = checkpointer.load(args.weights)
 
     iou_types = ("bbox",)
     if cfg.MODEL.MASK_ON:

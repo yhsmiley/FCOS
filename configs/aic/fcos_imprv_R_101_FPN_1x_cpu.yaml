@@ -22,6 +22,7 @@ MODEL:
     NUM_CLASSES: 21  # the number of classes including background
   ROI_BOX_HEAD:
     NUM_CLASSES: 21
+  DEVICE: "cpu"
 DATASETS:
   TRAIN: ("aic_train_cocostyle", "aic_val_cocostyle")
   TEST: ("aic_test_cocostyle",)
@@ -42,4 +43,3 @@ SOLVER:
   IMS_PER_BATCH: 1
 TEST:
   IMS_PER_BATCH: 4
-OUTPUT_DIR : 'training_dir/aic/fcos_imprv_R_101_FPN_1x'

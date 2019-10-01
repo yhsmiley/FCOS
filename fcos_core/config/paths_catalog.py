@@ -109,16 +109,16 @@ class DatasetCatalog(object):
             "ann_file": "cityscapes/annotations/instancesonly_filtered_gtFine_test.json"
         },
         "aic_train_cocostyle": {
-            "img_dir": "aic/data/JPEGImages",
-            "ann_file": "aic/data/Annotations/instances_aic_train.json"
+            "img_dir": "aic/data/JPEGImages_imagenet_openimages",
+            "ann_file": "aic/data/Annotations_coco/instances_aic_train.json"
         },
         "aic_val_cocostyle": {
-            "img_dir": "aic/data/JPEGImages",
-            "ann_file": "aic/data/Annotations/instances_aic_val.json"
+            "img_dir": "aic/data/JPEGImages_imagenet_openimages",
+            "ann_file": "aic/data/Annotations_coco/instances_aic_val.json"
         },
         "aic_test_cocostyle": {
-            "img_dir": "aic/data/JPEGImages",
-            "ann_file": "aic/data/Annotations/instances_aic_test.json"
+            "img_dir": "aic/data/JPEGImages_imagenet_openimages",
+            "ann_file": "aic/data/Annotations_coco/instances_aic_test.json"
         }
     }
 
