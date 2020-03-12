@@ -120,7 +120,7 @@ def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config_file",
-        default="",
+        default="configs/aic/<cfg name>",
         metavar="FILE",
         help="path to config file",
         type=str,
